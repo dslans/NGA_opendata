@@ -1,0 +1,7 @@
+streamlit
+pandas
+google-cloud-aiplatform
+google-cloud-bigquery
+pandas-gbq
+pytest
+pytest-html
