@@ -3,6 +3,13 @@
 .gemini/
 tools.yaml
 
+# terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+/nga-curator-sa-key.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

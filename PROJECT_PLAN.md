@@ -25,6 +25,7 @@ We will primarily use the following CSV files from the NGA dataset:
     *   `streamlit`
     *   `google-cloud-aiplatform`
     *   `google-cloud-bigquery`
+    *   `python-dotenv`
     *   `pytest`
     *   `pytest-html`
 
@@ -74,3 +75,14 @@ We will primarily use the following CSV files from the NGA dataset:
 7.  **Testing with `pytest`:**
     *   The project includes a `tests/` directory with tests for data quality and a `scripts/run_data_quality_tests.sh` script to execute them.
     *   Running the script generates a `test_data_load_report.html` for immediate review and also saves a timestamped copy to the `tests/reports/` directory to maintain a history of data quality over time.
+
+**6. Infrastructure Requirements (Terraform)**
+
+The following Google Cloud infrastructure is provisioned and managed using Terraform:
+
+*   **Service Account (`nga-curator-sa`):** A dedicated service account is created for the AI Museum Curator application to interact with Google Cloud services.
+    *   **Roles and Permissions:**
+        *   `roles/bigquery.dataEditor`: Provides comprehensive permissions for managing BigQuery data, including reading, writing, and updating datasets and tables. This role ensures the application can query the NGA open data.
+        *   `roles/bigquery.user`: Grants permissions to run BigQuery jobs, including queries and read sessions. This is crucial for the application to execute queries against BigQuery.
+        *   `roles/aiplatform.user`: Allows the service account to interact with Vertex AI services, specifically for using generative models to analyze user themes.
+*   **Terraform Configuration:** The infrastructure is defined in the `main.tf` file at the project root. This file includes the service account definition, IAM role bindings, and service account key creation.

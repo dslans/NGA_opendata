@@ -1,7 +1,10 @@
 streamlit
 pandas
-google-cloud-aiplatform
 google-cloud-bigquery
+google-cloud-bigquery-storage
+google-cloud-aiplatform
 pandas-gbq
 pytest
 pytest-html
+db-dtypes
+python-dotenv
