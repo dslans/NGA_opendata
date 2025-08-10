@@ -1,0 +1,14 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/nga-open/nga-curator-app:$COMMIT_SHA', '.']
+  dir: 'nga-curator' # Assuming your Dockerfile is in the nga-curator directory
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/nga-open/nga-curator-app:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['run', 'deploy', 'nga-curator-service', 
+         '--image', 'gcr.io/nga-open/nga-curator-app:$COMMIT_SHA', 
+         '--region', 'us-central1', # Or your desired region
+         '--platform', 'managed',
+         '--allow-unauthenticated'] # Adjust as needed for authentication
+images:
+- 'gcr.io/nga-open/nga-curator-app:$COMMIT_SHA'
