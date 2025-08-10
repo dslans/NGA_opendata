@@ -8,8 +8,12 @@ steps:
   args: ['tag', 'us-central1-docker.pkg.dev/nga-open/nga-curator-app:$COMMIT_SHA', 'us-central1-docker.pkg.dev/nga-open/nga-curator-app:latest']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'us-central1-docker.pkg.dev/nga-open/nga-curator-app:latest']
+  # Deploy container image to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', 'nga-curator-service', '--image', 'us-central1-docker.pkg.dev/nga-open/nga-curator-app:latest', '--region', 'us-central1', '--project', 'nga-open']
 
 images:
 - 'us-central1-docker.pkg.dev/nga-open/nga-curator-app:$COMMIT_SHA'
 options:
-  logging: CLOUD_LOGGING_ONLY
+  logging: CLOUD_LOGGING_ONLYY
