@@ -87,3 +87,9 @@ resource "google_project_iam_member" "cloud_build_logs_writer_role" {
   role    = "roles/logging.logWriter"
   member  = "serviceAccount:${google_service_account.cloud_build_sa.email}"
 }
+
+resource "google_project_iam_member" "artifact_registry_repo_admin_role" {
+  project = "nga-open"
+  role    = "roles/artifactregistry.repoAdmin"
+  member  = "serviceAccount:${google_service_account.cloud_build_sa.email}"
+}
