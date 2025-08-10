@@ -16,7 +16,7 @@ The system loads all 17 CSV files from the National Gallery of Art's open data c
 
 ## Files Created
 
-### 1. Data Loader (`nga-curator/load_to_bigquery.py`)
+### 1. Data Loader (`scripts/load_to_bigquery.py`)
 
 **Purpose**: Comprehensive data loading script that handles all 17 CSV files with proper metadata.
 
@@ -48,7 +48,7 @@ The system loads all 17 CSV files from the National Gallery of Art's open data c
 - `preferred_locations` - Public location descriptions (NEW)
 - `preferred_locations_tms_locations` - Location mappings (NEW)
 
-### 2. BigQuery Management Utilities (`nga-curator/bigquery_utils.py`)
+### 2. BigQuery Management Utilities (`scripts/bigquery_utils.py`)
 
 **Purpose**: Interactive utility for managing and validating the BigQuery dataset.
 
@@ -85,7 +85,7 @@ The system loads all 17 CSV files from the National Gallery of Art's open data c
 
 ```bash
 # Navigate to the project directory
-cd /Users/dslans/NGA_opendata/nga-curator
+cd /Users/dslans/NGA_opendata/scripts
 
 # Ensure environment is set up with credentials
 # Make sure .env file contains GOOGLE_APPLICATION_CREDENTIALS path
