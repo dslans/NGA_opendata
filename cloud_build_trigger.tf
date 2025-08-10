@@ -12,5 +12,6 @@ resource "google_cloudbuild_trigger" "main_branch_merge_trigger" {
     }
   }
 
-  filename = "cloudbuild.yaml"
+  filename      = "cloudbuild.yaml"
+  service_account = "projects/nga-open/serviceAccounts/983922642462@cloudbuild.gserviceaccount.com"
 }
