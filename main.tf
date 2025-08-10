@@ -99,3 +99,31 @@ resource "google_project_iam_member" "artifact_registry_create_on_push_writer_ro
   role    = "roles/artifactregistry.createOnPushWriter"
   member  = "serviceAccount:${google_service_account.cloud_build_sa.email}"
 }
+
+resource "google_project_service" "run_api" {
+  service = "run.googleapis.com"
+}
+
+resource "google_cloud_run_v2_service" "nga_curator_service" {
+  name     = "nga-curator-service"
+  location = "us-central1"
+  project  = "nga-open"
+  ingress  = "INGRESS_TRAFFIC_ALL"
+
+  template {
+    service_account = google_service_account.nga_curator.email
+    containers {
+      image = "us-central1-docker.pkg.dev/nga-open/nga-curator-app:latest" # Placeholder image
+      ports {
+        container_port = 8080
+      }
+      startup_probe {
+        http_get {
+          port = 8080
+        }
+      }
+    }
+  }
+
+  depends_on = [google_project_service.run_api]
+}
