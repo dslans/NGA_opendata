@@ -93,3 +93,9 @@ resource "google_project_iam_member" "artifact_registry_repo_admin_role" {
   role    = "roles/artifactregistry.repoAdmin"
   member  = "serviceAccount:${google_service_account.cloud_build_sa.email}"
 }
+
+resource "google_project_iam_member" "artifact_registry_create_on_push_writer_role" {
+  project = "nga-open"
+  role    = "roles/artifactregistry.createOnPushWriter"
+  member  = "serviceAccount:${google_service_account.cloud_build_sa.email}"
+}
