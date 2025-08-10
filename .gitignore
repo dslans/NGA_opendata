@@ -11,6 +11,7 @@ tools.yaml
 *.tfstate.backup
 .terraform.lock.hcl
 /nga-curator-sa-key.json
+terraform.tfvars
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

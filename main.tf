@@ -104,6 +104,12 @@ resource "google_project_service" "run_api" {
   service = "run.googleapis.com"
 }
 
+resource "google_artifact_registry_repository" "registry" {
+  location      = var.region
+  repository_id = "${var.service_name}-repo"
+  format        = "DOCKER"
+}
+
 resource "google_cloud_run_v2_service" "nga_curator_service" {
   name     = "nga-curator-service"
   location = "us-central1"
