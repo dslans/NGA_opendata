@@ -12,3 +12,5 @@ steps:
          '--allow-unauthenticated'] # Adjust as needed for authentication
 images:
 - 'gcr.io/nga-open/nga-curator-app:$COMMIT_SHA'
+options:
+  logging: CLOUD_LOGGING_ONLY

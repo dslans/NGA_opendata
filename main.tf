@@ -52,3 +52,32 @@ output "service_account_key_path" {
   value = google_service_account_key.nga_curator_key.private_key
   sensitive = true
 }
+
+resource "google_service_account" "cloud_build_sa" {
+  account_id   = "cloud-build-sa"
+  display_name = "Cloud Build Service Account"
+}
+
+resource "google_project_iam_member" "cloud_build_editor_role" {
+  project = "nga-open"
+  role    = "roles/cloudbuild.builds.editor"
+  member  = "serviceAccount:${google_service_account.cloud_build_sa.email}"
+}
+
+resource "google_project_iam_member" "artifact_registry_writer_role" {
+  project = "nga-open"
+  role    = "roles/artifactregistry.writer"
+  member  = "serviceAccount:${google_service_account.cloud_build_sa.email}"
+}
+
+resource "google_project_iam_member" "run_admin_role" {
+  project = "nga-open"
+  role    = "roles/run.admin"
+  member  = "serviceAccount:${google_service_account.cloud_build_sa.email}"
+}
+
+resource "google_project_iam_member" "service_account_user_role" {
+  project = "nga-open"
+  role    = "roles/iam.serviceAccountUser"
+  member  = "serviceAccount:${google_service_account.cloud_build_sa.email}"
+}
