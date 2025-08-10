@@ -81,3 +81,9 @@ resource "google_project_iam_member" "service_account_user_role" {
   role    = "roles/iam.serviceAccountUser"
   member  = "serviceAccount:${google_service_account.cloud_build_sa.email}"
 }
+
+resource "google_project_iam_member" "cloud_build_logs_writer_role" {
+  project = "nga-open"
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${google_service_account.cloud_build_sa.email}"
+}
