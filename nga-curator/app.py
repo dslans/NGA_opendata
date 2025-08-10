@@ -9,9 +9,22 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Initialize Vertex AI
-credentials = service_account.Credentials.from_service_account_file(os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"))
-vertexai.init(project="nga-open", credentials=credentials)
+# Initialize credentials - use default for Cloud Run, file-based for local development
+try:
+    # Try to use default credentials (Cloud Run)
+    from google.auth import default
+    credentials, project = default()
+    vertexai.init(project="nga-open")
+except Exception:
+    # Fallback to service account file for local development
+    if os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"):
+        credentials = service_account.Credentials.from_service_account_file(
+            os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+        )
+        vertexai.init(project="nga-open", credentials=credentials)
+    else:
+        st.error("No valid credentials found. Please configure authentication.")
+        st.stop()
 
 st.set_page_config(
     page_title="AI Museum Curator",
