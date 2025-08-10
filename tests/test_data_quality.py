@@ -1,4 +1,3 @@
-
 import pytest
 from google.cloud import bigquery
 import pandas as pd
@@ -27,6 +26,18 @@ def test_table_creation(bq_client):
         "published_images",
         "constituents",
         "objects_constituents",
+        "locations",
+        "alternative_identifiers",
+        "constituents_altnames",
+        "constituents_text_entries",
+        "media_items",
+        "media_relationships",
+        "object_associations",
+        "objects_dimensions",
+        "objects_historical_data",
+        "objects_text_entries",
+        "preferred_locations",
+        "preferred_locations_tms_locations",
     }
     tables = {table.table_id for table in bq_client.list_tables(DATASET_ID)}
     assert expected_tables.issubset(tables)
@@ -44,6 +55,20 @@ def test_object_id_uniqueness(bq_client):
     query_job = bq_client.query(sql)
     results = query_job.result()
     assert results.total_rows == 0, "Found duplicate objectids in the objects table."
+
+def test_constituent_id_uniqueness(bq_client):
+    """
+    Tests that the 'constituentid' in the 'constituents' table is unique.
+    """
+    sql = f"""
+        SELECT constituentid, COUNT(*)
+        FROM `{PROJECT_ID}.{DATASET_ID}.constituents`
+        GROUP BY 1
+        HAVING COUNT(*) > 1;
+    """
+    query_job = bq_client.query(sql)
+    results = query_job.result()
+    assert results.total_rows == 0, "Found duplicate constituentids in the constituents table."
 
 def test_critical_columns_not_null(bq_client):
     """
@@ -88,6 +113,113 @@ def test_referential_integrity_published_images(bq_client):
     query_job = bq_client.query(sql)
     results = query_job.result()
     assert results.total_rows == 0, "Found orphaned objectids in published_images."
+
+def test_referential_integrity_objects_constituents_objectid(bq_client):
+    """
+    Tests that all 'objectid's in 'objects_constituents' exist in the 'objects' table.
+    """
+    sql = f"""
+        SELECT t.objectid
+        FROM `{PROJECT_ID}.{DATASET_ID}.objects_constituents` AS t
+        LEFT JOIN `{PROJECT_ID}.{DATASET_ID}.objects` AS o ON t.objectid = o.objectid
+        WHERE o.objectid IS NULL
+        LIMIT 1;
+    """
+    query_job = bq_client.query(sql)
+    results = query_job.result()
+    assert results.total_rows == 0, "Found orphaned objectids in objects_constituents."
+
+def test_referential_integrity_objects_constituents_constituentid(bq_client):
+    """
+    Tests that all 'constituentid's in 'objects_constituents' exist in the 'constituents' table.
+    """
+    sql = f"""
+        SELECT t.constituentid
+        FROM `{PROJECT_ID}.{DATASET_ID}.objects_constituents` AS t
+        LEFT JOIN `{PROJECT_ID}.{DATASET_ID}.constituents` AS c ON t.constituentid = c.constituentid
+        WHERE c.constituentid IS NULL
+        LIMIT 1;
+    """
+    query_job = bq_client.query(sql)
+    results = query_job.result()
+    assert results.total_rows == 0, "Found orphaned constituentids in objects_constituents."
+
+
+
+def test_referential_integrity_constituents_altnames(bq_client):
+    """
+    Tests that all 'constituentid's in 'constituents_altnames' exist in the 'constituents' table.
+    """
+    sql = f"""
+        SELECT t.constituentid
+        FROM `{PROJECT_ID}.{DATASET_ID}.constituents_altnames` AS t
+        LEFT JOIN `{PROJECT_ID}.{DATASET_ID}.constituents` AS c ON t.constituentid = c.constituentid
+        WHERE c.constituentid IS NULL
+        LIMIT 1;
+    """
+    query_job = bq_client.query(sql)
+    results = query_job.result()
+    assert results.total_rows == 0, "Found orphaned constituentids in constituents_altnames."
+
+def test_referential_integrity_constituents_text_entries(bq_client):
+    """
+    Tests that all 'constituentid's in 'constituents_text_entries' exist in the 'constituents' table.
+    """
+    sql = f"""
+        SELECT t.constituentid
+        FROM `{PROJECT_ID}.{DATASET_ID}.constituents_text_entries` AS t
+        LEFT JOIN `{PROJECT_ID}.{DATASET_ID}.constituents` AS c ON t.constituentid = c.constituentid
+        WHERE c.constituentid IS NULL
+        LIMIT 1;
+    """
+    query_job = bq_client.query(sql)
+    results = query_job.result()
+    assert results.total_rows == 0, "Found orphaned constituentids in constituents_text_entries."
+
+def test_referential_integrity_objects_dimensions(bq_client):
+    """
+    Tests that all 'objectid's in 'objects_dimensions' exist in the 'objects' table.
+    """
+    sql = f"""
+        SELECT t.objectid
+        FROM `{PROJECT_ID}.{DATASET_ID}.objects_dimensions` AS t
+        LEFT JOIN `{PROJECT_ID}.{DATASET_ID}.objects` AS o ON t.objectid = o.objectid
+        WHERE o.objectid IS NULL
+        LIMIT 1;
+    """
+    query_job = bq_client.query(sql)
+    results = query_job.result()
+    assert results.total_rows == 0, "Found orphaned objectids in objects_dimensions."
+
+def test_referential_integrity_objects_historical_data(bq_client):
+    """
+    Tests that all 'objectid's in 'objects_historical_data' exist in the 'objects' table.
+    """
+    sql = f"""
+        SELECT t.objectid
+        FROM `{PROJECT_ID}.{DATASET_ID}.objects_historical_data` AS t
+        LEFT JOIN `{PROJECT_ID}.{DATASET_ID}.objects` AS o ON t.objectid = o.objectid
+        WHERE o.objectid IS NULL
+        LIMIT 1;
+    """
+    query_job = bq_client.query(sql)
+    results = query_job.result()
+    assert results.total_rows == 0, "Found orphaned objectids in objects_historical_data."
+
+def test_referential_integrity_objects_text_entries(bq_client):
+    """
+    Tests that all 'objectid's in 'objects_text_entries' exist in the 'objects' table.
+    """
+    sql = f"""
+        SELECT t.objectid
+        FROM `{PROJECT_ID}.{DATASET_ID}.objects_text_entries` AS t
+        LEFT JOIN `{PROJECT_ID}.{DATASET_ID}.objects` AS o ON t.objectid = o.objectid
+        WHERE o.objectid IS NULL
+        LIMIT 1;
+    """
+    query_job = bq_client.query(sql)
+    results = query_job.result()
+    assert results.total_rows == 0, "Found orphaned objectids in objects_text_entries."
 
 def test_column_rename_in_published_images(bq_client):
     """
