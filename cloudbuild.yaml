@@ -16,4 +16,4 @@ steps:
 images:
 - 'us-central1-docker.pkg.dev/nga-open/nga-curator-app:$COMMIT_SHA'
 options:
-  logging: CLOUD_LOGGING_ONLYY
+  logging: CLOUD_LOGGING_ONLY
