@@ -21,6 +21,7 @@ steps:
 # Build the container image
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'us-central1-docker.pkg.dev/nga-open/nga-curator-app:latest', '.']
+  dir: 'nga-curator' # Assuming your Dockerfile is in the nga-curator directory
 # Push the container image to Artifact Registry
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'us-central1-docker.pkg.dev/nga-open/nga-curator-app:latest']
