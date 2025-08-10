@@ -119,9 +119,13 @@ resource "google_cloud_run_v2_service" "nga_curator_service" {
   template {
     service_account = google_service_account.nga_curator.email
     containers {
-      image = "us-central1-docker.pkg.dev/nga-open/nga-curator-app:latest" # Placeholder image
+      image = "us-central1-docker.pkg.dev/nga-open/nga-curator-app-repo/nga-curator-app:latest"
       ports {
-        container_port = 8080
+        container_port = 8080  # Cloud Run standard port
+      }
+      env {
+        name  = "PORT"
+        value = "8080"
       }
       startup_probe {
         http_get {
